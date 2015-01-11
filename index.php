@@ -192,6 +192,7 @@ add_action( 'admin_enqueue_scripts', function(){
  */
 add_action( 'wp_enqueue_scripts', function(){
 
+	wp_enqueue_style( 'bootstrap', plugins_url( 'bootstrap.min.css', __FILE__ ) );
 
 	wp_enqueue_script( 'angularjs', plugins_url( 'angular.min.js', __FILE__ ), array(), '1.3.8' );
 	wp_enqueue_script( 
