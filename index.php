@@ -169,6 +169,8 @@ add_action('admin_menu', function(){
 				</form>
 			</div>
 			<?php
+			
+			do_action('cr_update_ranklist'); // Update ranklist when coder information is updated
 		}, 
 		'dashicons-chart-bar' );
 });
