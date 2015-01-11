@@ -255,7 +255,7 @@ add_shortcode( 'ranklist', function(){
 	ob_start();
 	?>
 	<div ng-app="Ranklist">
-		<table class="table" ng-controller="RanklistCtrl">
+		<table class="table" ng-controller="RanklistCtrl" style="width:100%">
 			<thead>
 				<tr>
 					<th>Rank</th>
