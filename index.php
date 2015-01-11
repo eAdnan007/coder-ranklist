@@ -15,6 +15,23 @@ if( $_SERVER['SCRIPT_FILENAME'] == __FILE__ )
   exit;
 }
 
+
+/**
+ * Create cron job to update ranks everyday
+ */
+register_activation_hook( __FILE__, function(){
+	wp_schedule_event( time(), 'daily', 'cr_update_ranklist' );
+});
+
+
+/**
+ * Remove cron while uninstalling the plugin
+ */
+register_deactivation_hook( __FILE__, function(){
+	wp_unschedule_event( wp_next_scheduled( 'cr_update_ranklist' ), 'cr_update_ranklist' );
+});
+
+
 /**
  * Create the admin page to maintain the list of coders
  */
@@ -194,12 +211,6 @@ add_action( 'wp_enqueue_scripts', function(){
 			'upload_path' => $directory ) );
 });
 
-/**
- * Create cron job to update ranks everyday
- */
-register_activation_hook( __FILE__, function(){
-	wp_schedule_event( time(), 'daily', 'cr_update_ranklist' );
-});
 
 /**
  * Update ranklist on cron call
