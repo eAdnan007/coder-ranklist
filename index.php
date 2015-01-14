@@ -288,14 +288,16 @@ add_shortcode( 'ranklist', function(){
 					<td>
 						<a 
 							ng-href="http://www.topcoder.com/member-profile/{{coder.tc_handle}}/algorithm/"
-							ng-style="color: colorCode( 'tc', {tcr} )">
+							ng-style="{color: colorCode( 'tc', coder.tcr )}"
+							target="_blank">
 							{{coder.tc_handle}}
 						</a>
 					</td>
 					<td>
 						<a 
 							ng-href="http://codeforces.com/profile/{{coder.cf_handle}}"
-							ng-style="color: colorCode( 'cf', {cfr} )">
+							ng-style="{color: colorCode( 'cf', coder.cfr )}"
+							target="_blank">
 							{{coder.cf_handle}}
 						</a>
 					</td>
