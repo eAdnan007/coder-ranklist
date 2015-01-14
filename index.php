@@ -282,7 +282,7 @@ add_shortcode( 'ranklist', function(){
 			</thead>
 			<tbody>
 				<tr ng-repeat="coder in list">
-					<td>{{$index + 1}}</td>
+					<td>{{index($index)}}</td>
 					<td>{{coder.name}}</td>
 					<td>{{coder.sid}}</td>
 					<td>

@@ -24,6 +24,13 @@
 						else return '#E20226';
 					}
 				}
+
+				$scope.index = function( $index ){
+					if( $index == 0 ) return 1;
+					if( $scope.list[$index].lup != $scope.list[$index-1].lup ) $scope.i = $index;
+
+					return $scope.i+1;
+				}
 			});
 	});
 })();
