@@ -275,9 +275,9 @@ add_shortcode( 'ranklist', function(){
 					<th>Rank</th>
 					<th>Name</th>
 					<th>ID</th>
-					<th>Top Coder</th>
+					<th>TopCoder</th>
 					<th>Codeforces</th>
-					<th>Points</th>
+					<th>Rating</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -285,9 +285,21 @@ add_shortcode( 'ranklist', function(){
 					<td>{{$index + 1}}</td>
 					<td>{{coder.name}}</td>
 					<td>{{coder.sid}}</td>
-					<td>{{coder.tc_handle}}</td>
-					<td>{{coder.cf_handle}}</td>
-					<td>{{coder.lup}}</td>
+					<td>
+						<a 
+							ng-href="http://www.topcoder.com/member-profile/{{coder.tc_handle}}/algorithm/"
+							ng-style="color: colorCode( 'tc', {tcr} )">
+							{{coder.tc_handle}}
+						</a>
+					</td>
+					<td>
+						<a 
+							ng-href="http://codeforces.com/profile/{{coder.cf_handle}}"
+							ng-style="color: colorCode( 'cf', {cfr} )">
+							{{coder.cf_handle}}
+						</a>
+					</td>
+					<td>{{coder.lup | number : 2}}</td>
 				</tr>
 			</tbody>
 		</table>
