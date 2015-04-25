@@ -318,10 +318,13 @@ function cr_get_info_array( $handle, $judge ){
 	if('topcoder' == $judge) $url = str_replace('{handle}', $handle, 'https://api.topcoder.com/v2/users/{handle}/statistics/data/srm');
 	elseif('codeforces' == $judge) $url = str_replace('{handle}', $handle, 'http://codeforces.com/api/user.rating?handle={handle}');
 	else return false;
-
-	$json = file_get_contents($url);
-	if($json) return json_decode($json);
-	else return false;
+	
+	$data = wp_remote_get($url);
+	if(!is_wp_error($data)){
+		$json = $data['body'];
+		if($json) return json_decode($json);
+	}
+	return false;
 }
 
 function cr_get_user_points( $handle, $judge ){
