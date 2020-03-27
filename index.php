@@ -270,6 +270,7 @@ add_shortcode( 'ranklist', function(){
 	?>
 	<div ng-app="Ranklist">
 		<style>
+			.link-to-profile:link { text-decoration: none;}
 			.cf-newbie { color: gray;}
 			.cf-pupil { color: green;}
 			.cf-specialist { color: #03A89E;}
@@ -293,8 +294,8 @@ add_shortcode( 'ranklist', function(){
 			<thead>
 				<tr>
 					<th>Rank</th>
-					<th>Name</th>
 					<th>ID</th>
+					<th>Name</th>
 					<th>Codeforces</th>
 					<th>CodeChef</th>
 					<th>Rating</th>
@@ -303,16 +304,16 @@ add_shortcode( 'ranklist', function(){
 			<tbody>
 				<tr ng-repeat="coder in list">
 					<td>{{index($index)}}</td>
-					<td>{{coder.name}}</td>
 					<td>{{coder.sid}}</td>
+					<td>{{coder.name}}</td>
 					<td>
 						<b>
 							<a 
 								ng-href="http://codeforces.com/profile/{{coder.cf_handle}}"
 								ng-class="[colorClass('cf', coder.cfr)]"
+								class="link-to-profile"
 								target="_blank">
 								{{coder.cf_handle}}
-								{{coder.cfr}}
 							</a>
 						</b>
 					</td>
@@ -321,9 +322,9 @@ add_shortcode( 'ranklist', function(){
 							<a 
 								ng-href="https://www.codechef.com/users/{{coder.cc_handle}}"
 								ng-class="[colorClass('cc', coder.ccr)]"
+								class="link-to-profile"
 								target="_blank">
 								{{coder.cc_handle}}
-								{{coder.ccr}}
 							</a>
 						</b>
 					</td>
