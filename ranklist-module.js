@@ -29,15 +29,6 @@
 						else return 'cc-7star';
 					}
 				}
-				$scope.colorCode = function(judge, rating) {
-					if( 'tc' == judge ){
-						if( !rating || rating < 900 ) return '#8BA1B6';
-						else if( rating < 1200 ) return '#009500';
-						else if( rating < 1500 ) return '#6E5DFB';
-						else if( rating < 2200 ) return '#EDD30A';
-						else return '#E20226';
-					}
-				}
 
 				$scope.index = function( $index ){
 					if( $index == 0 ) return 1;
