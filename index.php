@@ -269,6 +269,19 @@ add_shortcode( 'ranklist', function(){
 	ob_start();
 	?>
 	<div ng-app="Ranklist">
+		<style>
+			.cf-newbie { color: gray;}
+			.cf-pupil { color: green;}
+			.cf-specialist { color: #03A89E;}
+			.cf-expert { color: blue;}
+			.cf-candidate-master { color: #a0a;}
+			.cf-master { color: #FF8C00;}
+			.cf-international-master { color: #FF8C00;}
+			.cf-grandmaster { color: red;}
+			.cf-internation-grandmaster { color: red;}
+			.cf-legendary-grandmaster { color: red;}
+			.cf-legendary-grandmasterp::first-letter { color: black;}
+		</style>
 		<table class="table" ng-controller="RanklistCtrl" style="width:100%">
 			<thead>
 				<tr>
@@ -299,7 +312,7 @@ add_shortcode( 'ranklist', function(){
 						<b>
 							<a 
 								ng-href="http://codeforces.com/profile/{{coder.cf_handle}}"
-								ng-style="{color: colorCode( 'cf', coder.cfr )}"
+								ng-class="[colorClass('cf', coder.cfr)]"
 								target="_blank">
 								{{coder.cf_handle}}
 							</a>

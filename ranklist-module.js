@@ -4,19 +4,25 @@
 		$http.get(ranklist_data.upload_path+ranklist_data.file)
 			.success(function(data){
 				$scope.list = data;
-
+				console.log(ranklist_data.upload_path+ranklist_data.file);
 				var orderBy = $filter('orderBy');
 				$scope.list = orderBy($scope.list, '-lup', false);
-				$scope.colorCode = function(judge, rating){
+				$scope.colorClass = function(judge, rating) {
 					if( 'cf' == judge ){
-						if( !rating || rating < 1200 ) return '#808080';
-						else if( rating < 1500 ) return '#008000';
-						else if( rating < 1700 ) return '#0000FF';
-						else if( rating < 1900 ) return '#AA00AA';
-						else if( rating < 2200 ) return '#FF8C00';
-						else return '#FF0000';
-					}
-					else if( 'tc' == judge ){
+						if( !rating || rating < 1200 ) return 'cf-newbie';
+						else if( rating < 1400 ) return 'cf-pupil';
+						else if( rating < 1600 ) return 'cf-specialist';
+						else if( rating < 1900 ) return 'cf-expert';
+						else if( rating < 2100 ) return 'cf-candidate-master';
+						else if( rating < 2300 ) return 'cf-master';
+						else if( rating < 2400 ) return 'cf-international-master';
+						else if( rating < 2600 ) return 'cf-grandmaster';
+						else if( rating < 3000 ) return 'cf-internation-grandmaster';
+						else return 'cf-legendary-grandmaster';
+					} 
+				}
+				$scope.colorCode = function(judge, rating) {
+					if( 'tc' == judge ){
 						if( !rating || rating < 900 ) return '#8BA1B6';
 						else if( rating < 1200 ) return '#009500';
 						else if( rating < 1500 ) return '#6E5DFB';
