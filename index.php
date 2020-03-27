@@ -57,7 +57,7 @@ add_action('admin_menu', function(){
 								<th class="manage-column column-title name">Name</th>
 								<th class="manage-column column-title sid">Student ID</th>
 								<th class="manage-column column-title cf_handle">CF Handle</th>
-								<th class="manage-column column-title tc_handle">TC Handle</th>
+								<th class="manage-column column-title cc_handle">CC Handle</th>
 								<th class="manage-column column-title class_performance">Performance</th>
 								<th class="manage-column column-title"><a href="#" class="add_coder add-new-h2">Add</a></th>
 							</tr>
@@ -67,7 +67,7 @@ add_action('admin_menu', function(){
 								<th class="manage-column column-title name">Name</th>
 								<th class="manage-column column-title sid">Student ID</th>
 								<th class="manage-column column-title cf_handle">CF Handle</th>
-								<th class="manage-column column-title tc_handle">TC Handle</th>
+								<th class="manage-column column-title cc_handle">CC Handle</th>
 								<th class="manage-column column-title class_performance">Performance</th>
 								<th class="manage-column column-title"><a href="#" class="add_coder add-new-h2">Add</a></th>
 							</tr>
@@ -86,8 +86,8 @@ add_action('admin_menu', function(){
 										<td class="cf_handle">
 											<input type="text" name="coder[<?php echo $i; ?>][cf_handle]" name_format="coder[%d][cf_handle]" value="<?php echo $coder['cf_handle']; ?>">
 										</td>
-										<td class="tc_handle">
-											<input type="text" name="coder[<?php echo $i; ?>][tc_handle]" name_format="coder[%d][tc_handle]" value="<?php echo $coder['tc_handle']; ?>">
+										<td class="cc_handle">
+											<input type="text" name="coder[<?php echo $i; ?>][cc_handle]" name_format="coder[%d][cc_handle]" value="<?php echo $coder['cc_handle']; ?>">
 										</td>
 										<td class="class_performance">
 											<input type="text" name="coder[<?php echo $i; ?>][class_performance]" name_format="coder[%d][class_performance]" value="<?php echo $coder['class_performance']; ?>">
@@ -108,8 +108,8 @@ add_action('admin_menu', function(){
 									<td class="cf_handle">
 										<input type="text" name="coder[0][cf_handle]" name_format="coder[%d][cf_handle]">
 									</td>
-									<td class="tc_handle">
-										<input type="text" name="coder[0][tc_handle]" name_format="coder[%d][tc_handle]">
+									<td class="cc_handle">
+										<input type="text" name="coder[0][cc_handle]" name_format="coder[%d][cc_handle]">
 									</td>
 									<td class="class_performance">
 										<input type="text" name="coder[0][class_performance]" name_format="coder[%d][class_performance]">
@@ -126,9 +126,9 @@ add_action('admin_menu', function(){
 
 					<div class="points">
 						<label>Point Formula: </label>
-						<input type="text" name="point_formula" class="regular-text" value="<?php echo get_option('cr_formula', '{CFR}*60/1000 + {TCR}*20/1500 + {CP}'); ?>">
+						<input type="text" name="point_formula" class="regular-text" value="<?php echo get_option('cr_formula', '{CFR}*60/1000 + {CCR}*20/1500 + {CP}'); ?>">
 						<br>
-						<small class="desc">Complease the equation using the variables {CFR}, {TCR} &amp; {CP} for respectively Codeforce Rating, Top Coder Rating &amp; Class performance.</small>
+						<small class="desc">Complease the equation using the variables {CFR}, {CCR} &amp; {CP} for respectively Codeforce Rating, CodeChef Rating &amp; Class performance.</small>
 					</div>
 
 					<?php wp_nonce_field( 'ranklist', 'cr_nonce' ); ?>
@@ -224,17 +224,17 @@ add_action( 'cr_update_ranklist', function(){
 
 	foreach( $ranklist as $i => $coder ){
 		$cf_rating = cr_get_user_points( $coder['cf_handle'], 'codeforces' );
-		$tc_rating = cr_get_user_points( $coder['tc_handle'], 'topcoder' );
+		$cc_rating = cr_get_user_points( $coder['cc_handle'], 'codechef' );
 
 		$equation = strtr( $formula, array(
 			'{CFR}'  => $cf_rating,
-			'{TCR}'  => $tc_rating,
+			'{CCR}'  => $cc_rating,
 			'{CP}'   => $coder['class_performance'] ) );
 
 		$lu_points = eval( "return $equation;" );
 
 		$ranklist[$i]['cfr'] = $cf_rating;
-		$ranklist[$i]['tcr'] = $tc_rating;
+		$ranklist[$i]['ccr'] = $cc_rating;
 		$ranklist[$i]['lup'] = $lu_points;
 	}
 
@@ -269,39 +269,62 @@ add_shortcode( 'ranklist', function(){
 	ob_start();
 	?>
 	<div ng-app="Ranklist">
+		<style>
+			.link-to-profile:link { text-decoration: none;}
+			.cf-newbie { color: gray;}
+			.cf-pupil { color: green;}
+			.cf-specialist { color: #03A89E;}
+			.cf-expert { color: blue;}
+			.cf-candidate-master { color: #a0a;}
+			.cf-master { color: #FF8C00;}
+			.cf-international-master { color: #FF8C00;}
+			.cf-grandmaster { color: red;}
+			.cf-internation-grandmaster { color: red;}
+			.cf-legendary-grandmaster::first-letter { color: black;}
+			.cf-legendary-grandmaster { color: red;}
+			.cc-1star { color: gray;}
+			.cc-2star { color: green;}
+			.cc-3star { color: blue;}
+			.cc-4star { color: #684273;}
+			.cc-5star { color: yellow;}
+			.cc-6star { color: orange;}
+			.cc-7star { color: red;}
+		</style>
 		<table class="table" ng-controller="RanklistCtrl" style="width:100%">
 			<thead>
 				<tr>
 					<th>Rank</th>
-					<th>Name</th>
 					<th>ID</th>
-					<th>TopCoder</th>
+					<th>Name</th>
 					<th>Codeforces</th>
+					<th>CodeChef</th>
 					<th>Rating</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="coder in list">
 					<td>{{index($index)}}</td>
-					<td>{{coder.name}}</td>
 					<td>{{coder.sid}}</td>
+					<td>{{coder.name}}</td>
 					<td>
 						<b>
 							<a 
-								ng-href="http://www.topcoder.com/member-profile/{{coder.tc_handle}}/algorithm/"
-								ng-style="{color: colorCode( 'tc', coder.tcr )}"
+								ng-href="http://codeforces.com/profile/{{coder.cf_handle}}"
+								ng-class="[colorClass('cf', coder.cfr)]"
+								class="link-to-profile"
 								target="_blank">
-								{{coder.tc_handle}}
+								{{coder.cf_handle}}
 							</a>
 						</b>
 					</td>
 					<td>
 						<b>
 							<a 
-								ng-href="http://codeforces.com/profile/{{coder.cf_handle}}"
-								ng-style="{color: colorCode( 'cf', coder.cfr )}"
+								ng-href="https://www.codechef.com/users/{{coder.cc_handle}}"
+								ng-class="[colorClass('cc', coder.ccr)]"
+								class="link-to-profile"
 								target="_blank">
-								{{coder.cf_handle}}
+								{{coder.cc_handle}}
 							</a>
 						</b>
 					</td>
@@ -315,8 +338,8 @@ add_shortcode( 'ranklist', function(){
 });
 
 function cr_get_info_array( $handle, $judge ){
-	if('topcoder' == $judge) $url = str_replace('{handle}', $handle, 'https://api.topcoder.com/v2/users/{handle}/statistics/data/srm');
-	elseif('codeforces' == $judge) $url = str_replace('{handle}', $handle, 'http://codeforces.com/api/user.rating?handle={handle}');
+	if('codeforces' == $judge) $url = str_replace('{handle}', $handle, 'http://codeforces.com/api/user.rating?handle={handle}');
+	elseif('codechef' == $judge) $url = str_replace('{handle}', $handle, 'https://codechef-apijs.herokuapp.com/rating/{handle}');
 	else return false;
 	
 	$data = wp_remote_get($url);
@@ -331,14 +354,14 @@ function cr_get_user_points( $handle, $judge ){
 	$info = cr_get_info_array( $handle, $judge );
 	if(!$info) return 0;
 
-	if('topcoder' == $judge){
-		$rating = $info->rating;
-		$last_contest_date = strtotime($info->mostRecentEventDate);
-	}
-	elseif('codeforces' == $judge){
+	if('codeforces' == $judge){
 		$latest = array_pop($info->result);
 		$rating = $latest->newRating;
 		$last_contest_date = $latest->ratingUpdateTimeSeconds;
+	}
+	elseif('codechef' == $judge){
+		$rating = $info->rating;
+		$last_contest_date = $info->lastParticipationTimeStamp;
 	}
 	
 	$value_date = mktime(0,0,0,date('m')-1,date('d'),date('Y'));
