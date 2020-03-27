@@ -58,6 +58,7 @@ add_action('admin_menu', function(){
 								<th class="manage-column column-title sid">Student ID</th>
 								<th class="manage-column column-title cf_handle">CF Handle</th>
 								<th class="manage-column column-title tc_handle">TC Handle</th>
+								<th class="manage-column column-title cc_handle">CC Handle</th>
 								<th class="manage-column column-title class_performance">Performance</th>
 								<th class="manage-column column-title"><a href="#" class="add_coder add-new-h2">Add</a></th>
 							</tr>
@@ -68,6 +69,7 @@ add_action('admin_menu', function(){
 								<th class="manage-column column-title sid">Student ID</th>
 								<th class="manage-column column-title cf_handle">CF Handle</th>
 								<th class="manage-column column-title tc_handle">TC Handle</th>
+								<th class="manage-column column-title cc_handle">CC Handle</th>
 								<th class="manage-column column-title class_performance">Performance</th>
 								<th class="manage-column column-title"><a href="#" class="add_coder add-new-h2">Add</a></th>
 							</tr>
@@ -88,6 +90,9 @@ add_action('admin_menu', function(){
 										</td>
 										<td class="tc_handle">
 											<input type="text" name="coder[<?php echo $i; ?>][tc_handle]" name_format="coder[%d][tc_handle]" value="<?php echo $coder['tc_handle']; ?>">
+										</td>
+										<td class="cc_handle">
+											<input type="text" name="coder[<?php echo $i; ?>][cc_handle]" name_format="coder[%d][cc_handle]" value="<?php echo $coder['cc_handle']; ?>">
 										</td>
 										<td class="class_performance">
 											<input type="text" name="coder[<?php echo $i; ?>][class_performance]" name_format="coder[%d][class_performance]" value="<?php echo $coder['class_performance']; ?>">
@@ -110,6 +115,9 @@ add_action('admin_menu', function(){
 									</td>
 									<td class="tc_handle">
 										<input type="text" name="coder[0][tc_handle]" name_format="coder[%d][tc_handle]">
+									</td>
+									<td class="cc_handle">
+										<input type="text" name="coder[0][cc_handle]" name_format="coder[%d][cc_handle]">
 									</td>
 									<td class="class_performance">
 										<input type="text" name="coder[0][class_performance]" name_format="coder[%d][class_performance]">
@@ -225,6 +233,7 @@ add_action( 'cr_update_ranklist', function(){
 	foreach( $ranklist as $i => $coder ){
 		$cf_rating = cr_get_user_points( $coder['cf_handle'], 'codeforces' );
 		$tc_rating = cr_get_user_points( $coder['tc_handle'], 'topcoder' );
+		$cc_rating = cr_get_user_points( $coder['cc_handle'], 'codechef' );
 
 		$equation = strtr( $formula, array(
 			'{CFR}'  => $cf_rating,
@@ -235,6 +244,7 @@ add_action( 'cr_update_ranklist', function(){
 
 		$ranklist[$i]['cfr'] = $cf_rating;
 		$ranklist[$i]['tcr'] = $tc_rating;
+		$ranklist[$i]['ccr'] = $cc_rating;
 		$ranklist[$i]['lup'] = $lu_points;
 	}
 
@@ -281,6 +291,13 @@ add_shortcode( 'ranklist', function(){
 			.cf-internation-grandmaster { color: red;}
 			.cf-legendary-grandmasterp::first-letter { color: black;}
 			.cf-legendary-grandmaster { color: red;}
+			.cc-1star { color: gray;}
+			.cc-2star { color: green;}
+			.cc-3star { color: blue;}
+			.cc-4star { color: #684273;}
+			.cc-5star { color: yellow;}
+			.cc-6star { color: orange;}
+			.cc-7star { color: red;}
 		</style>
 		<table class="table" ng-controller="RanklistCtrl" style="width:100%">
 			<thead>
@@ -290,6 +307,7 @@ add_shortcode( 'ranklist', function(){
 					<th>ID</th>
 					<th>TopCoder</th>
 					<th>Codeforces</th>
+					<th>CodeChef</th>
 					<th>Rating</th>
 				</tr>
 			</thead>
@@ -305,6 +323,7 @@ add_shortcode( 'ranklist', function(){
 								ng-style="{color: colorCode( 'tc', coder.tcr )}"
 								target="_blank">
 								{{coder.tc_handle}}
+								{{coder.tcr}}
 							</a>
 						</b>
 					</td>
@@ -315,6 +334,18 @@ add_shortcode( 'ranklist', function(){
 								ng-class="[colorClass('cf', coder.cfr)]"
 								target="_blank">
 								{{coder.cf_handle}}
+								{{coder.cfr}}
+							</a>
+						</b>
+					</td>
+					<td>
+						<b>
+							<a 
+								ng-href="https://www.codechef.com/users/{{coder.cc_handle}}"
+								ng-class="[colorClass('cc', coder.ccr)]"
+								target="_blank">
+								{{coder.cc_handle}}
+								{{coder.ccr}}
 							</a>
 						</b>
 					</td>
@@ -330,6 +361,7 @@ add_shortcode( 'ranklist', function(){
 function cr_get_info_array( $handle, $judge ){
 	if('topcoder' == $judge) $url = str_replace('{handle}', $handle, 'https://api.topcoder.com/v2/users/{handle}/statistics/data/srm');
 	elseif('codeforces' == $judge) $url = str_replace('{handle}', $handle, 'http://codeforces.com/api/user.rating?handle={handle}');
+	elseif('codechef' == $judge) $url = str_replace('{handle}', $handle, 'https://codechef-apijs.herokuapp.com/rating/{handle}');
 	else return false;
 	
 	$data = wp_remote_get($url);
@@ -352,6 +384,10 @@ function cr_get_user_points( $handle, $judge ){
 		$latest = array_pop($info->result);
 		$rating = $latest->newRating;
 		$last_contest_date = $latest->ratingUpdateTimeSeconds;
+	}
+	elseif('codechef' == $judge){
+		$rating = $info->rating;
+		$last_contest_date = $info->lastParticipationTimeStamp;
 	}
 	
 	$value_date = mktime(0,0,0,date('m')-1,date('d'),date('Y'));
