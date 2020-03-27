@@ -279,7 +279,7 @@ add_shortcode( 'ranklist', function(){
 			.cf-international-master { color: #FF8C00;}
 			.cf-grandmaster { color: red;}
 			.cf-internation-grandmaster { color: red;}
-			.cf-legendary-grandmasterp::first-letter { color: black;}
+			.cf-legendary-grandmaster::first-letter { color: black;}
 			.cf-legendary-grandmaster { color: red;}
 			.cc-1star { color: gray;}
 			.cc-2star { color: green;}
