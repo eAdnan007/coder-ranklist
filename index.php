@@ -279,8 +279,8 @@ add_shortcode( 'ranklist', function(){
 			.cf-international-master { color: #FF8C00;}
 			.cf-grandmaster { color: red;}
 			.cf-internation-grandmaster { color: red;}
-			.cf-legendary-grandmaster { color: red;}
 			.cf-legendary-grandmasterp::first-letter { color: black;}
+			.cf-legendary-grandmaster { color: red;}
 		</style>
 		<table class="table" ng-controller="RanklistCtrl" style="width:100%">
 			<thead>
