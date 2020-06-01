@@ -48,7 +48,7 @@ add_action('admin_menu', function(){
 			}
 			if( isset( $_GET['refresh'] ) ) {
 				wp_schedule_single_event(time(), 'cr_update_ranklist');
-                        	wp_safe_redirect( remove_query_arg('refresh') );
+				wp_safe_redirect( remove_query_arg('refresh') );
 				exit;
 			}
 			?>
