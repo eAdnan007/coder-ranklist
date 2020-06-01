@@ -46,9 +46,17 @@ add_action('admin_menu', function(){
 				update_option( 'cr_coders', $_POST['coder'] );
 				update_option( 'cr_formula', $_POST['point_formula'] );
 			}
+			if( isset( $_GET['refresh'] ) ) {
+				wp_schedule_single_event(time(), 'cr_update_ranklist');
+                        	wp_safe_redirect( remove_query_arg('refresh') );
+				exit;
+			}
 			?>
 			<div class="wrap">
-				<h2>LU ACM Coder's List</h2>
+				<h1 class="wp-heading-inline">LU ACM Coder's List</h1>
+				<a href="<?php add_query_arg(array('page' => 'coder-ranklist', 'refresh' => true));?>" class="page-title-a$
+					Initiate Refresh
+				</a>
 
 				<form action="" method="post">
 					<table class="wp-list-table widefat fixed media" cellspacing="0">
