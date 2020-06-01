@@ -20,7 +20,7 @@ if( $_SERVER['SCRIPT_FILENAME'] == __FILE__ )
  * Create cron job to update ranks everyday
  */
 register_activation_hook( __FILE__, function(){
-	wp_schedule_event( time(), 'daily', 'cr_update_ranklist' );
+	wp_schedule_event( strtotime('tomorrow'), 'daily', 'cr_update_ranklist' );
 });
 
 
