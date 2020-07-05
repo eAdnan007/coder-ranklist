@@ -20,7 +20,7 @@ if( $_SERVER['SCRIPT_FILENAME'] == __FILE__ )
  * Create cron job to update ranks everyday
  */
 register_activation_hook( __FILE__, function(){
-	wp_schedule_event( strtotime('tomorrow'), 'daily', 'cr_update_ranklist' );
+	wp_schedule_event( time(), 'daily', 'cr_update_ranklist' );
 });
 
 
@@ -54,10 +54,9 @@ add_action('admin_menu', function(){
 			?>
 			<div class="wrap">
 				<h1 class="wp-heading-inline">LU ACM Coder's List</h1>
-				<a href="<?php add_query_arg(array('page' => 'coder-ranklist', 'refresh' => true));?>" class="page-title-a$
-					Initiate Refresh
+				<a href="<?php add_query_arg(array('page' => 'coder-ranklist', 'refresh' => true));?>" class="page-title-action">
+					Refresh
 				</a>
-
 				<form action="" method="post">
 					<table class="wp-list-table widefat fixed media" cellspacing="0">
 						<thead>
@@ -200,11 +199,11 @@ add_action( 'wp_enqueue_scripts', function(){
 
 	wp_enqueue_style( 'bootstrap', plugins_url( 'bootstrap.min.css', __FILE__ ) );
 
-	wp_enqueue_script( 'angularjs', plugins_url( 'angular.min.js', __FILE__ ), array(), '1.3.8' );
+	wp_register_script( 'angular', plugins_url( 'angular.min.js', __FILE__ ), array(), '1.4.0' );
 	wp_enqueue_script( 
 		'ranklist-module', 
 		plugins_url( 'ranklist-module.js', __FILE__ ), 
-		array( 'angularjs' ) );
+		array( 'angular' ) );
 
 
 

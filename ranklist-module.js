@@ -4,7 +4,6 @@
 		$http.get(ranklist_data.upload_path+ranklist_data.file)
 			.success(function(data){
 				$scope.list = data;
-				console.log(ranklist_data.upload_path+ranklist_data.file);
 				var orderBy = $filter('orderBy');
 				$scope.list = orderBy($scope.list, '-lup', false);
 				$scope.colorClass = function(judge, rating) {
